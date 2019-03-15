@@ -31,6 +31,7 @@ public class VentanaJuego extends javax.swing.JFrame {
     BufferedImage buffer = null;
     
     Nave miNave = new Nave();
+    Disparo miDisparo = new Disparo();
     
       /*Ponemos un temporizador con un import que cada 10 segundos va a efectuar un
     nuevo actionlistener, el cual va a invocar a un nuevo método--> bucleDelJuego*/
@@ -71,8 +72,9 @@ public class VentanaJuego extends javax.swing.JFrame {
         ////////////////////////////////////////////////
         /*SEGUNDO: REDIBUJAMOS CADA ELEMENTO EN SU POSICION*/
         g2.drawImage(miNave.imagen, miNave.x, miNave.y, null);
+        g2.drawImage(miDisparo.imagen, miDisparo.x, miDisparo.y, null);
         miNave.mueve();
-        
+        miDisparo.mueve();
         
         //////////////////////////////////////////////
         /*TERCERO: SE DIBUJA DE GOLPE SOBRE EL JPANEL*/
@@ -139,6 +141,9 @@ public class VentanaJuego extends javax.swing.JFrame {
             case KeyEvent.VK_LEFT: miNave.setPulsadoIzquierda(true);
             break; //Break significa que no haga la siguiente linea
             case KeyEvent.VK_RIGHT: miNave.setPulsadoDerecha(true);
+            break;
+            case KeyEvent.VK_SPACE: miDisparo.x = miNave.x;
+                                    miDisparo.y = miNave.y;
             break;
         }
     }//GEN-LAST:event_formKeyPressed
