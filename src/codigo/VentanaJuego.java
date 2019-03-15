@@ -9,6 +9,7 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 import javax.swing.Timer;
 
@@ -29,6 +30,8 @@ public class VentanaJuego extends javax.swing.JFrame {
     
     BufferedImage buffer = null;
     
+    Nave miNave = new Nave();
+    
       /*Ponemos un temporizador con un import que cada 10 segundos va a efectuar un
     nuevo actionlistener, el cual va a invocar a un nuevo método--> bucleDelJuego*/
     
@@ -48,6 +51,10 @@ public class VentanaJuego extends javax.swing.JFrame {
         buffer.createGraphics();
         //Iniciamos el temporizador
         temporizador.start();
+        
+        //Inicializo la posición inical de la nave
+        miNave.x = ANCHOPANTALLA /2 - miNave.imagen.getWidth(this) /2;
+        miNave.y = ALTOPANTALLA - 10 - miNave.imagen.getHeight(this) -50;
     }
     
     
@@ -63,7 +70,8 @@ public class VentanaJuego extends javax.swing.JFrame {
        
         ////////////////////////////////////////////////
         /*SEGUNDO: REDIBUJAMOS CADA ELEMENTO EN SU POSICION*/
-        
+        g2.drawImage(miNave.imagen, miNave.x, miNave.y, null);
+        miNave.mueve();
         
         
         //////////////////////////////////////////////
@@ -87,6 +95,14 @@ public class VentanaJuego extends javax.swing.JFrame {
         jPanel1 = new javax.swing.JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                formKeyPressed(evt);
+            }
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                formKeyReleased(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -116,6 +132,26 @@ public class VentanaJuego extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void formKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_formKeyPressed
+        /*Especificamos que botón queremos que active el evento*/
+        switch (evt.getKeyCode()) {
+            case KeyEvent.VK_LEFT: miNave.setPulsadoIzquierda(true);
+            break; //Break significa que no haga la siguiente linea
+            case KeyEvent.VK_RIGHT: miNave.setPulsadoDerecha(true);
+            break;
+        }
+    }//GEN-LAST:event_formKeyPressed
+
+    private void formKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_formKeyReleased
+        /*Desactiva la accion cuando dejamos de pulsar el boton que queremos*/ 
+        switch (evt.getKeyCode()) {
+            case KeyEvent.VK_LEFT: miNave.setPulsadoIzquierda(false);
+            break; 
+            case KeyEvent.VK_RIGHT: miNave.setPulsadoDerecha(false);
+            break;
+        }
+    }//GEN-LAST:event_formKeyReleased
 
     /**
      * @param args the command line arguments
