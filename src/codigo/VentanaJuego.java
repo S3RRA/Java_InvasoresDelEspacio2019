@@ -1,8 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+/*SPACE INVADERS: Kill them all*/
 package codigo;
 
 import java.awt.Color;
@@ -13,10 +9,10 @@ import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 import javax.swing.Timer;
 
-
 /*
  * @author Pablo Serrano Manzarbeitia
  */
+
 
 public class VentanaJuego extends javax.swing.JFrame {
 
@@ -25,6 +21,10 @@ public class VentanaJuego extends javax.swing.JFrame {
     static int ANCHOPANTALLA = 600;
     static int ALTOPANTALLA = 450;
     
+    //Declaro el numero de marcianos que van a aparecer
+    int filas = 5;
+    int columnas = 10;
+    
       /*El buffer lo que hace es ALMACENAR temporalmente la pantalla del juego, 
     para posteriormente plasmarla*/
     
@@ -32,6 +32,12 @@ public class VentanaJuego extends javax.swing.JFrame {
     
     Nave miNave = new Nave();
     Disparo miDisparo = new Disparo();
+    //Marciano miMarciano = new Marciano();
+    /*Declaramos un array de dos dimensiones para los marcianos*/
+    Marciano [][] listaMarcianos = new Marciano [filas] [columnas];
+    boolean direccionMarcianos = false;
+    
+    
     
       /*Ponemos un temporizador con un import que cada 10 segundos va a efectuar un
     nuevo actionlistener, el cual va a invocar a un nuevo método--> bucleDelJuego*/
@@ -55,7 +61,17 @@ public class VentanaJuego extends javax.swing.JFrame {
         
         //Inicializo la posición inical de la nave
         miNave.x = ANCHOPANTALLA /2 - miNave.imagen.getWidth(this) /2;
-        miNave.y = ALTOPANTALLA - 10 - miNave.imagen.getHeight(this) -50;
+        miNave.y = ALTOPANTALLA - miNave.imagen.getHeight(this) -40;
+        
+        //Inicializo el array de marcianos
+        for (int i=0; i < filas; i++){
+            for (int j=0; j < columnas; j++){
+                listaMarcianos[i][j] = new Marciano();
+                listaMarcianos[i][j].x = j*(15 + listaMarcianos[i][j].imagen1.getWidth(null));
+                listaMarcianos[i][j].y = i*(10 + listaMarcianos[i][j].imagen1.getHeight(null));
+            }
+        }
+        
     }
     
     
@@ -73,8 +89,11 @@ public class VentanaJuego extends javax.swing.JFrame {
         /*SEGUNDO: REDIBUJAMOS CADA ELEMENTO EN SU POSICION*/
         g2.drawImage(miNave.imagen, miNave.x, miNave.y, null);
         g2.drawImage(miDisparo.imagen, miDisparo.x, miDisparo.y, null);
+       // g2.drawImage(miMarciano.imagen1, miMarciano.x, miMarciano.y, null);
+        pintaMarcianos(g2);
         miNave.mueve();
         miDisparo.mueve();
+        //miMarciano.mueve();
         
         //////////////////////////////////////////////
         /*TERCERO: SE DIBUJA DE GOLPE SOBRE EL JPANEL*/
@@ -83,7 +102,15 @@ public class VentanaJuego extends javax.swing.JFrame {
         g2.drawImage(buffer, 0, 0, null);
         
     }
-    
+        
+        private void pintaMarcianos(Graphics2D _g2) {
+            for (int i=0; i < filas; i++){
+                for (int j=0; j < columnas; j++){
+                    listaMarcianos[i][j].mueve();
+                    _g2.drawImage(listaMarcianos[i][j].imagen1, listaMarcianos[i][j].x, listaMarcianos[i][j].y, null);
+                }
+            }
+        }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -97,6 +124,7 @@ public class VentanaJuego extends javax.swing.JFrame {
         jPanel1 = new javax.swing.JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setResizable(false);
         addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 formKeyPressed(evt);
