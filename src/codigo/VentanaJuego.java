@@ -6,6 +6,7 @@ import java.awt.Graphics2D;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import javax.swing.Timer;
 
@@ -33,9 +34,12 @@ public class VentanaJuego extends javax.swing.JFrame {
     Nave miNave = new Nave();
     Disparo miDisparo = new Disparo();
     //Marciano miMarciano = new Marciano();
-    /*Declaramos un array de dos dimensiones para los marcianos*/
+    /*Declaramos un array de dos dimensiones para los marcianos (TABLA)*/
     Marciano [][] listaMarcianos = new Marciano [filas] [columnas];
     boolean direccionMarcianos = false;
+    //El contador sirve para decidir que imagen del marciano toca poner
+    int contador; //Si no indicamos que valor, automaticamente el int se iguala a cero
+    
     
     
     
@@ -78,11 +82,12 @@ public class VentanaJuego extends javax.swing.JFrame {
     /*Controla el redibujado de los objetos del JPanel1(pantalla)*/
     
     private void bucleDelJuego() {
+        contador++;
         /*PRIMERO: BORRO TODO LO QUE HAY EN EL BUFFER*/
            //Aqui "apunto" a donde quiero borrar, AL BUFFER
         Graphics2D g2 = (Graphics2D) buffer.getGraphics();
         g2.setColor(Color.BLACK);
-            //Aquí borro, resetea, lo pinta de nuevo en blanco
+            //Aquí borro, resetea, lo pinta de negro
         g2.fillRect(0, 0, ANCHOPANTALLA, ALTOPANTALLA);
        
         ////////////////////////////////////////////////
@@ -91,6 +96,7 @@ public class VentanaJuego extends javax.swing.JFrame {
         g2.drawImage(miDisparo.imagen, miDisparo.x, miDisparo.y, null);
        // g2.drawImage(miMarciano.imagen1, miMarciano.x, miMarciano.y, null);
         pintaMarcianos(g2);
+        chequeaColision();
         miNave.mueve();
         miDisparo.mueve();
         //miMarciano.mueve();
@@ -102,15 +108,63 @@ public class VentanaJuego extends javax.swing.JFrame {
         g2.drawImage(buffer, 0, 0, null);
         
     }
+       
+    private void chequeaColision(){
+        Rectangle2D.Double rectanguloMarciano = new Rectangle2D.Double();
+        Rectangle2D.Double rectanguloDisparo = new Rectangle2D.Double();
+        //Este comando sirve para ajustar las dimensiones del rectangulo:
+        rectanguloDisparo.setFrame(miDisparo.x, miDisparo.y, miDisparo.imagen.getWidth(null),
+                                    miDisparo.imagen.getHeight(null));
         
-        private void pintaMarcianos(Graphics2D _g2) {
-            for (int i=0; i < filas; i++){
-                for (int j=0; j < columnas; j++){
-                    listaMarcianos[i][j].mueve();
-                    _g2.drawImage(listaMarcianos[i][j].imagen1, listaMarcianos[i][j].x, listaMarcianos[i][j].y, null);
+        for (int i=0; i < filas; i++) {
+            for (int j=0; j < columnas; j++) {
+                rectanguloMarciano.setFrame(listaMarcianos[i][j].x, listaMarcianos[i][j].y, 
+                                            listaMarcianos[i][j].imagen1.getWidth(null),
+                                            listaMarcianos[i][j].imagen1.getHeight(null)
+                                            );
+                if (rectanguloDisparo.intersects(rectanguloMarciano)) {
+                    listaMarcianos[i][j].y = 2000;
+                    miDisparo.y = 30000;
                 }
             }
         }
+    }
+    
+    private void cambiaDireccionMarcianos() {
+        for (int i=0; i < filas; i++) {
+            for (int j=0; j < columnas; j++) {
+                listaMarcianos[i][j].setvX(listaMarcianos[i][j].getvX()*-1);
+            }
+        }
+    } 
+    
+    private void pintaMarcianos(Graphics2D _g2) {
+        //Declaro un int de Marciano por no tener que escribir todo esto tol rato
+        int anchoMarciano = listaMarcianos[0][0].imagen1.getWidth(null);
+            
+        for (int i=0; i < filas; i++){
+            for (int j=0; j < columnas; j++){
+                listaMarcianos[i][j].mueve();
+                /*Chequeo si el marciano se ha chocado con la pared para cambiar de direccion*/
+                if (listaMarcianos[i][j].x + anchoMarciano == ANCHOPANTALLA){
+                    cambiaDireccionMarcianos();
+                }
+                if (listaMarcianos[i][j].x == 0) {
+                    cambiaDireccionMarcianos();
+                }
+                //El contador nos indica que imagen poner
+                if (contador < 50) {
+                    _g2.drawImage(listaMarcianos[i][j].imagen1, listaMarcianos[i][j].x,
+                                    listaMarcianos[i][j].y, null);
+                }
+                else if (contador < 100) {
+                    _g2.drawImage(listaMarcianos[i][j].imagen2, listaMarcianos[i][j].x,
+                                    listaMarcianos[i][j].y, null);
+                    }
+                    else contador = 0;
+            }
+        }
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.

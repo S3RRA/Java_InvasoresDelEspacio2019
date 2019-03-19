@@ -24,7 +24,12 @@ public class Disparo {
     }
     
     public void mueve() {
-        y--;
+        y -= 3;
+    }
+    
+    public void posicionamientoDisparo (Nave _nave) {
+        x = _nave.x + _nave.imagen.getWidth(null)/2 - imagen.getWidth(null)/2;
+        y = _nave.y;
     }
 
 }

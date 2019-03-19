@@ -14,7 +14,18 @@ public class Marciano {
     public Image imagen1, imagen2 = null;
     public int x = 0;
     public int y = 0;
-    public int vX = 1; //Aceleración
+    
+    private int vX = 1; //Aceleración
+
+    /*Con esta podemos cambiar la variable en otras clases*/
+    public void setvX(int vX) {
+        this.vX = vX;
+    }
+    
+    /*Con esta podemos leer la variable cambiada con set*/
+    public int getvX() {
+        return vX;
+    }
     
     public Marciano() {
         

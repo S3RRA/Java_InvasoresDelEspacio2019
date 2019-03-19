@@ -29,10 +29,10 @@ public class Nave {
     
     /*Ordenes de movimiento para la nave*/
     public void mueve() {
-        if(pulsadoIzquierda) {
+        if(pulsadoIzquierda && x > 0) {
             x = x - 10;
         }
-        if(pulsadoDerecha) {
+        if(pulsadoDerecha && x < VentanaJuego.ANCHOPANTALLA - imagen.getWidth(null)) {
             x = x + 10;
         }
     }
