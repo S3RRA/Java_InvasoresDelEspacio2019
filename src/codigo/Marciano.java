@@ -12,8 +12,11 @@ import javax.imageio.ImageIO;
 public class Marciano {
     
     public Image imagen1, imagen2 = null;
+    
     public int x = 0;
     public int y = 0;
+    
+    public boolean vivo = true;
     
     private int vX = 1; //Aceleración
 

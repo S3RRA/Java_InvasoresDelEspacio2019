@@ -9,9 +9,12 @@ import javax.imageio.ImageIO;
  * @author Pablo Serrano Manzarbeitia
  */
 public class Disparo {
+    
     public Image imagen = null;
     public int x = 0;
-    public int y = 0;
+    public int y = 2000;//pintamos el disparo muy por debajo de la pantalla para que no se vea
+    /*Creo una variable buleana para saber si el disparo desaparece o no (no ir al infinito)*/
+    public boolean disparado = false;
 
 
     public Disparo() {
@@ -24,12 +27,15 @@ public class Disparo {
     }
     
     public void mueve() {
-        y -= 3;
+        if (disparado){
+            y -= 3;
+        }
     }
     
     public void posicionamientoDisparo (Nave _nave) {
         x = _nave.x + _nave.imagen.getWidth(null)/2 - imagen.getWidth(null)/2;
         y = _nave.y;
+        disparado = true;
     }
 
 }
